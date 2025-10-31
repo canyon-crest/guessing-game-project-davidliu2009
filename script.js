@@ -55,7 +55,7 @@ function reset(){
 function updateScore(){
     scoreArr.push(score);
     scoreArr.sort((a,b)=>a-b);
-    let lb = document.getElementByName("leaderboard");
+    let lb = document.getElementsByName("leaderboard");
     wins.textContent = "Total wins: " + scoreArr.length;
     let sum = 0;
     for(let i=0; i<scoreArr.length; i++){
