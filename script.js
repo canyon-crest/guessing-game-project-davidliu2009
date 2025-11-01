@@ -12,6 +12,7 @@ function play(){
     playBtn.disabled = true;
     guessBtn.disabled = false;
     guess.disabled = false;
+    giveUp.disabled = false;
     for(let i=0; i<levelArr.length; i++){
         if(levelArr[i].checked){
             level = levelArr[i].value;
@@ -31,16 +32,33 @@ function makeGuess(){
     }
     score++;
     if(userGuess < answer){
-        msg.textContent = "Your guess was too low!"
+        msg.textContent = playername + ", your guess was too low!"
     }
     else if(userGuess > answer){
-        msg.textContent = "Your guess was too high!"
+        msg.textContent = playername + ", your guess was too high!"
     }
     else{
-        msg.textContent = "Congratulations, you guessed correctly! It took you " + score + " tries. Press play to play again."
+        msg.textContent = "Congratulations, " + playername + " you guessed correctly! It took you " + score + " tries. Press play to play again."
         updateScore();
         reset();
     }
+    let diff = Math.abs(userGuess - answer);
+    if (diff >= level/2) {
+        msg.textContent += " You are cold.";
+    }
+    else if (diff >= level/4) {
+        msg.textContent += " You are warm.";
+    }
+    else {
+        msg.textContent += " You are hot!";
+    }
+    let rating = "";
+    if (score <= 3) rating = "Amazing!";
+    else if (score <= 6) rating = "Good job.";
+    else if (score <= 10) rating = "Not bad.";
+    else rating = "Try again to improve your score!";
+
+    msg.textContent += " " + rating;
 }
 function reset(){
     guessBtn.disabled = true;
@@ -48,6 +66,7 @@ function reset(){
     guess.value = "";
     guess.placeholder = "";
     playBtn.disabled = false;
+    giveUp.disabled = true;
     for(let i=0; i<levelArr.length; i++){
         levelArr[i].disabled = false;
     }
@@ -71,3 +90,24 @@ function time(){
     let d = new Date();
     return d;
 }
+
+function getName() {
+    let name = document.getElementById("username").value;
+    if (name == "") return null;
+
+    name = name[0].toUpperCase() + name.slice(1).toLowerCase();
+    return name;
+}
+
+let playername = getName();
+
+giveUp.addEventListener("click", giveUpGame);
+
+function giveUpGame() {
+    msg.textContent = "You gave up! The answer was " + answer + ".";
+    score = parseInt(level);
+    updateScore();
+    reset();
+}
+
+
