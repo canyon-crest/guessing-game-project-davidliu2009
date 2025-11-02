@@ -2,10 +2,15 @@
 let level, answer, score;
 const levelArr = document.getElementsByName("level");
 const scoreArr = [];
+const timeArr = [];
 date.textContent = time();
 
 playBtn.addEventListener("click", play);
 guessBtn.addEventListener("click", makeGuess);
+
+setInterval(() => {
+    clock.textContent = new Date().toLocaleTimeString();
+}, 1000);
 
 function play(){
     score = 0;
@@ -22,6 +27,7 @@ function play(){
     msg.textContent = "Guess a number from 1-" + level;
     answer = Math.floor(Math.random()*level)+1;
     guess.placeholder = answer;
+    roundStart = Date.now();
 }
 
 function makeGuess(){
@@ -41,6 +47,13 @@ function makeGuess(){
         msg.textContent = "Congratulations, " + playername + " you guessed correctly! It took you " + score + " tries. Press play to play again."
         updateScore();
         reset();
+        roundEnd = Date.now();
+        let roundTime = (roundEnd - roundStart) / 1000;
+        msg.textContent += "You took " + roundTime + " seconds.";
+        timeArr.push(roundTime);
+        let avgTime = timeArr.reduce((a,b)=>a+b) / timeArr.length;
+
+        document.getElementById("avgTime").textContent += avgTime.toFixed(2) + " seconds";
     }
     let diff = Math.abs(userGuess - answer);
     if (diff >= level/2) {
@@ -88,7 +101,23 @@ function updateScore(){
 }
 function time(){
     let d = new Date();
-    return d;
+    const months = ["January","February","March","April","May","June",
+                    "July","August","September","October","November","December"];
+
+    let day = d.getDate();
+    let suffix = "th";
+
+    if (day % 10 === 1 && day !== 11) {
+        suffix = "st";
+    }
+    else if (day % 10 == 2 && day !== 12) {
+        suffix = "nd";
+    }
+    else if (day % 10 == 3 && day !== 13) {
+        suffix = "rd";
+    }
+    let formattedDate = months[d.getMonth()] + " " + day + suffix + ", " + d.getFullYear();
+    return formattedDate;
 }
 
 function getName() {
