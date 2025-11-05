@@ -13,6 +13,11 @@ setInterval(() => {
 }, 1000);
 
 function play(){
+    const playername = getName();
+    if (!playername) {
+        msg.textContent = "Please enter your name before playing.";
+        return;
+    }
     score = 0;
     playBtn.disabled = true;
     guessBtn.disabled = false;
@@ -24,7 +29,7 @@ function play(){
         }
         levelArr[i].disabled = true;
     }
-    msg.textContent = "Guess a number from 1-" + level;
+    msg.textContent = "Good luck, " + playername + ". Guess a number from 1-" + level;
     answer = Math.floor(Math.random()*level)+1;
     guess.placeholder = answer;
     roundStart = Date.now();
@@ -38,18 +43,26 @@ function makeGuess(){
     }
     score++;
     if(userGuess < answer){
-        msg.textContent = playername + ", your guess was too low!"
+        msg.textContent = "Your guess was too low!"
     }
     else if(userGuess > answer){
-        msg.textContent = playername + ", your guess was too high!"
+        msg.textContent = "Your guess was too high!"
     }
     else{
-        msg.textContent = "Congratulations, " + playername + " you guessed correctly! It took you " + score + " tries. Press play to play again."
+        msg.textContent = "Congratulations, you guessed correctly! It took you " + score + " tries. Press play to play again."
         updateScore();
         reset();
         roundEnd = Date.now();
         let roundTime = (roundEnd - roundStart) / 1000;
         msg.textContent += "You took " + roundTime + " seconds.";
+        
+        let rating = "";
+        if (score <= 3) rating = "Amazing!";
+        else if (score <= 6) rating = "Good job.";
+        else if (score <= 10) rating = "Not bad.";
+        else rating = "Try again to improve your score!";
+
+        msg.textContent += " " + rating;
         timeArr.push(roundTime);
         let avgTime = timeArr.reduce((a,b)=>a+b) / timeArr.length;
 
@@ -65,13 +78,6 @@ function makeGuess(){
     else {
         msg.textContent += " You are hot!";
     }
-    let rating = "";
-    if (score <= 3) rating = "Amazing!";
-    else if (score <= 6) rating = "Good job.";
-    else if (score <= 10) rating = "Not bad.";
-    else rating = "Try again to improve your score!";
-
-    msg.textContent += " " + rating;
 }
 function reset(){
     guessBtn.disabled = true;
@@ -119,16 +125,15 @@ function time(){
     let formattedDate = months[d.getMonth()] + " " + day + suffix + ", " + d.getFullYear();
     return formattedDate;
 }
+const username = document.getElementById('username');
 
-function getName() {
-    let name = document.getElementById("username").value;
-    if (name == "") return null;
-
-    name = name[0].toUpperCase() + name.slice(1).toLowerCase();
-    return name;
+function getName(){
+  if (!username) return null;                   // sanity check
+  let name = username.value.trim();
+  if (name === "") return null; 
+  name = name[0].toUpperCase() + name.slice(1).toLowerCase();
+  return name;
 }
-
-let playername = getName();
 
 giveUp.addEventListener("click", giveUpGame);
 
