@@ -72,7 +72,7 @@ function makeGuess(){
         timeArr.push(roundTime);
         let avgTime = timeArr.reduce((a,b)=>a+b) / timeArr.length;
 
-        document.getElementById("avgTime").textContent += avgTime.toFixed(2) + " seconds";
+        document.getElementById("avgTime").textContent = avgTime.toFixed(2) + " seconds";
     }
     let diff = Math.abs(userGuess - answer);
     if (diff >= level/2) {
