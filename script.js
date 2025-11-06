@@ -31,7 +31,7 @@ function play(){
     }
     msg.textContent = "Good luck, " + playername + ". Guess a number from 1-" + level;
     answer = Math.floor(Math.random()*level)+1;
-    guess.placeholder = answer;
+    
     roundStart = Date.now();
 }
 
@@ -42,6 +42,12 @@ function makeGuess(){
         return;
     }
     score++;
+
+    if (userGuess == 17) {
+        msg.textContent = "🔥Wow! 17 is the magic number! You unlocked a secret message! Have a great day!🎉";
+        return;
+    }
+
     if(userGuess < answer){
         msg.textContent = "Your guess was too low!"
     }
